@@ -17,6 +17,7 @@ var ast = [[aleatorio(700),aleatorio(500)],
 $(document).ready(inicio);
 //$(document).click(capturaMouse);
 
+
 function inicio(){
 	var lienzo = $("#lienzo")[0];
 	var contexto = lienzo.getContext("2d");
@@ -52,7 +53,7 @@ function capturaMouse(event){
 }
 
 function Nave(){
-	this.img = [$("#ship")[0],$("#explosion")[0]];
+	this.img = [$("#bruja")[0],$("#explosion")[0]];
 	this.msgs = ["verifca el frente", "cuidado al lado", "mejor moverse", 
 	             "ojo alrededor", "cuidado con el asteroide", "evita los asteroides",
 	             "acelera","no puedes colisionar mas","debes mantener la vida",
@@ -81,7 +82,7 @@ function Nave(){
 }
 
 function Asteroid(){
-	this.img = $("#asteroid")[0];			
+	this.img = $("#bruja")[0];			
 	this.dibujar = function(ctx, x1, y1){
 		var img = this.img;
 		ctx.save();

@@ -9,8 +9,8 @@ h1, h3{
 aside {
 	float: right;
 	clear: none;
-	margin:2em;
-	padding:1em;
+	margin: 2em;
+	padding: 1em;
 	text-align: center;
 }
 
@@ -46,7 +46,7 @@ button {
 	margin:0.3em;
 	color:#ff0000;
 }
-
+	
 #ship, #asteroid, #explosion {
 	display:none;
 }
