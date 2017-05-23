@@ -7,6 +7,7 @@ var clic=false;
 var durClic=0;
 var contacto=false;
 var ast = [aleatorio(700),aleatorio(500)];
+var option = 1;
 
 $(document).ready(inicio);
 $(document).mousemove(capturaMouse);
@@ -133,12 +134,44 @@ function run(){
 			
 			
 			if(!contacto){
-				ast[0]-=5;
-				ast[1]+=3;
+				switch(option){
+					case 1:
+						ast[0]+=5;
+						ast[1]-=3;
+						break;
+					case 2:
+						ast[0]-=5;
+						ast[1]+=3;
+						break;
+					case 3:
+						ast[0]+=5;
+						ast[1]+=3;
+						break;
+					case 4:
+						ast[0]-=5;
+						ast[1]-=3;
+						break;
+					case 5:
+						ast[0]+=6;
+						break;
+					case 6:
+						ast[1]-=6;
+						break;
+					case 7:
+						ast[0]-=6;
+						break;
+					case 8:
+						ast[1]+=6;
+						break;
+					default:
+						ast[0]+=5;
+						ast[1]-=3;				
+				}
 				ast[0] = (700 + ast[0])%700;
 				ast[1] = (500 + ast[1])%500;
 				objBruja.dibujar(contextoBuffer,ast[0],ast[1],0);
 			}else{
+				option = aleatorio(8);
 				puntos++;
 				ast[0]=aleatorio(700);
 				ast[1]=aleatorio(500);
