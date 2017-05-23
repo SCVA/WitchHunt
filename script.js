@@ -34,6 +34,7 @@ function inicio(){
 		y = 250;	
 		duracion = 1000;
 		run();		
+		puntos=0;
 	});
 	
 }
@@ -157,6 +158,8 @@ function run(){
 
 		contextoBuffer.font = "bold 50px sans-serif";
 		contextoBuffer.fillText("JUEGO TERMINADO", 180, 200);
+		contextoBuffer.font = "bold 30px sans-serif";
+		contextoBuffer.fillText("puntos = "+puntos, 25, 25);
 		//contextoBuffer.fillText(parseInt(duracion/10)+" pts", 250, 250);
 		contexto.clearRect(0,0,700,500);
 		contexto.drawImage(buffer, 0, 0);
