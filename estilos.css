@@ -1,5 +1,5 @@
 body {
-	background:url('imagenes/space1.png');
+	background:url('imagenes/casaEmbrujada.png');
 	background-color:#000000;
 }
 
@@ -30,7 +30,7 @@ section {
 }
 
 canvas {
-	background:url('imagenes/space1.png');
+	background:url('imagenes/casaEmbrujada.png');
 	color:#ffffff;
 	border:2px solid;
 	border-color:#ffffff;

@@ -1,8 +1,17 @@
 var x = 350;
 var y = 250;
+var puntos = 0;
 var duracion = 1000;
+var rotacion = 0;
+var clic=false;
+var durClic=0;
+var contacto=false;
+var ast = [aleatorio(700),aleatorio(500)];
 
 $(document).ready(inicio);
+$(document).mousemove(capturaMouse);
+$(document).click(clickOn);
+$(document).mouseup(clickOff);
 
 function inicio(){
 	var lienzo = $("#lienzo")[0];
@@ -12,33 +21,79 @@ function inicio(){
 	buffer.height = lienzo.height;
 	contextoBuffer = buffer.getContext("2d");
 	contextoBuffer.fillStyle = "#ffffff"; 
-	contextoBuffer.clearRect(0,0,1000,800);
+	contextoBuffer.clearRect(0,0,700,500);
 	contextoBuffer.font = "bold 50px sans-serif";
-	contextoBuffer.fillText("Witch Hunt", 220, 240);
+	contextoBuffer.fillText("Witch Hunt!", 180, 200);
 	contextoBuffer.fillStyle = "#ff0000"; 
 	contextoBuffer.font = "bold 30px sans-serif";
-	contexto.clearRect(0,0,1000,800);
+	contexto.clearRect(0,0,700,500);
 	contexto.drawImage(buffer, 0, 0);
 	$('#brisa')[0].play();
-	$("#iniciar").click(function(){	
-		contexto.clearRect(0,0,1000,800);
-		contexto.drawImage(brujaP, x, 0);
-		//cursor: url(imagenes/mira.png), url(cursor.cur), pointer;
-		//cursor: url(imagenes/mira.png), pointer;
-		//$("#bruja").
+	$('#iniciar').click(function(){	
 		x = 350;
 		y = 250;	
 		duracion = 1000;
 		run();		
 	});
-	$("#recomendaciones").load("recomendaciones.html");
+	
 }
 
-var x = 200;
-		var y = 300;
-		var x2 = 80;
-		var y2 = 80;
+function aleatorio(tope){
+	return Math.floor((Math.random() * tope) + 1);
+} 
+
+function capturaMouse(event){
+	//alert(event.which);
+x = event.clientX-182;
+y = event.clientY-65;
+	
+}
+
+function clickOn(event){
+	clic=true;
+	durClic=9;
+}
+
+function clickOff(event){
+	durClic=0;
+	clic=false;
+}
+
+function Mira(){
+	this.img = $("#mira")[0];
+	
+	
+	this.dibujar = function(ctx){
+		var img = this.img;
+		ctx.drawImage(img, x, y);
+		ctx.save();
 		
+		
+		ctx.restore();
+	}
+	
+	this.colision = function(xx,yy){
+		var distancia=0;
+		distancia=Math.sqrt( Math.pow( (xx-x), 2)+Math.pow( (yy-y),2));
+		if(distancia>40)
+		   return false;
+		else
+		   return true;	
+	}
+}
+
+function Bruja(){
+	this.img = [$("#bruja")[0],$("#explosion")[0]];			
+	this.dibujar = function(ctx, x1, y1,i){
+		
+		var img = this.img[i];
+		ctx.save();
+		ctx.translate(x1,y1);
+		
+		ctx.drawImage(img,-img.width/2,-img.height/2);
+		ctx.restore();
+	}
+}
 
 function run(){ 
 	var lienzo = $("#lienzo")[0];
@@ -49,40 +104,52 @@ function run(){
 	contextoBuffer = buffer.getContext("2d");
 	contextoBuffer.fillStyle = "#ffffff"; 
 	if(duracion >= 0){  		
-		duracion--;
-		dibujar(x,y,x2,y2);
-		click();
-		/*if(duracion % 50 == 0)
-			//msg = aleatorio(9);
-		var objnave = new Nave();
-		var objasteroid = [new Asteroid(),new Asteroid(),new Asteroid(),
-						   new Asteroid(),new Asteroid(),new Asteroid(),
-						   new Asteroid(),new Asteroid(),new Asteroid(),
-						   new Asteroid()]; 
+		duracion-=0.5;
+		
+			
+		var objMira = new Mira();
+		var objBruja = new Bruja(); 
 		contextoBuffer.clearRect(0,0,700,500);
 
 		contextoBuffer.font = "bold 25px sans-serif";
-		contextoBuffer.fillText("tiempo = "+duracion, 25, 25);
-		contextoBuffer.fillText("puntos = "+parseInt(duracion/10), 250, 25);
-		//objnave.dibujar(contextoBuffer,0);
+		contextoBuffer.fillText("puntos = "+puntos, 25, 25);
+		contextoBuffer.fillText("Tiempo: "+parseInt(duracion/10), 250, 25);
+		objMira.dibujar(contextoBuffer,0);
 		rotacion -= 5;
-		for(i=0;i<10;i++){
 			
-			objasteroid[i].dibujar(contextoBuffer,ast[i][0],ast[i][1]);
-			/*if(objnave.colision(ast[i][0],ast[i][1])){
-				vida -=1;
-				objnave.dibujar(contextoBuffer,1);
-				$('#explode')[0].play();
-			}*/
-			/*ast[i][0]-=5;
-			ast[i][1]+=3;
-			ast[i][0] = (700 + ast[i][0])%700;
-			ast[i][1] = (500 + ast[i][1])%500;
-		}
+			if(clic){
+				durClic=10;
+				if(objMira.colision(ast[0],ast[1])){
+
+					
+					objMira.dibujar(contextoBuffer);
+					$('#explode')[0].play();
+					contacto=true;
+				}
+				clic=false;
+				
+			}
+			
+			
+			if(!contacto){
+				ast[0]-=5;
+				ast[1]+=3;
+				ast[0] = (700 + ast[0])%700;
+				ast[1] = (500 + ast[1])%500;
+				objBruja.dibujar(contextoBuffer,ast[0],ast[1],0);
+			}else{
+				puntos++;
+				ast[0]=aleatorio(700);
+				ast[1]=aleatorio(500);
+				ast[0] = (700 + ast[0])%700;
+				ast[1] = (500 + ast[1])%500;
+				objBruja.dibujar(contextoBuffer,ast[0],ast[1],1);
+			}
+			contacto=false;
 		contexto.clearRect(0,0,700,500);
 		contexto.drawImage(buffer, 0, 0);
 		setTimeout("run()",20);
-		$("button").css("display","none");*/
+		$('#iniciar').css("display","none");
 	}else{
 		$('#brisa')[0].pause();
 		
@@ -93,49 +160,9 @@ function run(){
 		//contextoBuffer.fillText(parseInt(duracion/10)+" pts", 250, 250);
 		contexto.clearRect(0,0,700,500);
 		contexto.drawImage(buffer, 0, 0);
-		$("button").css("display","inline");
+		$('#iniciar').css("display","inline");
 		
 	}
 }
 
-function click(){
-	canvas = $("#lienzo")[0];
-	ctx = canvas.getContext("2d");
-	//Añadimos un addEventListener al canvas, para reconocer el click
-	canvas.addEventListener("click",   
-	//Una vez se haya clickado se activará la siguiente función
-	function(e){
-	/** Las siguientes 2 líneas lo que hacen és saber en que 
-		*parte del canvas se ha clickado. Si ha clickado dentro
-		* del cuadrado se activará mover().
-		* La operación que utilizamos es restar la parte izquierda que sobra
-		* des del canvas asta el explorador (cancas.offsetLeft)
-		* con el click (e.clientY)
-		*/
-		if(e.clientX-canvas.offsetLeft > 200 && e.clientX-canvas.offsetLeft < 280){  
-			if(e.clientY-canvas.offsetTop > 300 && e.clientY-canvas.offsetTop < 380){  
-				//si ha clickado dentro del cuadro verde
-			mover();   
-			} 
-		}
-	}
-,false);}
 
-function mover(){
-	if(y>150){
-		y--;
-		//es la encargada de llamar cada 10 milesimas a la funcion mover()
-		setTimeout(mover,10);
-	}
-	//limpiar();
-	dibujar(x,y,x2,y2);
-	alert("Hello! I am an alert box!!");
-}
-
-function dibujar(x,y,x2,y2){
-	var lienzo = $("#lienzo")[0];
-	var ctx = lienzo.getContext("2d");
-	ctx.fillStyle = "green";
-	ctx.fillRect(x, y, x2, y2);
-	ctx.fill();
-}
